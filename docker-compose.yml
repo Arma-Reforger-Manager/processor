@@ -1,7 +1,0 @@
-services:
-  processor:
-    container_name: app_cron
-    build:
-      context: ./src
-      dockerfile: Dockerfile
-    entrypoint: node /work/dist/index.js

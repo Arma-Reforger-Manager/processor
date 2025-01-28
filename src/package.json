@@ -5,7 +5,7 @@
   "scripts": {
     "start": "ls -a && node dist/index.js",
     "build": "esbuild './cron/**/*.ts' --bundle --packages=external --platform=node --target=node18 --outdir=dist --outbase=cron --minify --sourcemap --format=esm --resolve-extensions=.ts,.js",
-    "dev": "vite-node -w cron/index.ts --host",
+    "dev": "vite-node -w cron/index.ts",
     "test": "vitest"
   },
   "license": "MIT",

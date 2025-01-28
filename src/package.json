@@ -1,0 +1,23 @@
+{
+  "name": "src",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "start": "ls -a && node dist/index.js",
+    "build": "esbuild './cron/**/*.ts' --bundle --packages=external --platform=node --target=node18 --outdir=dist --outbase=cron --minify --sourcemap --format=esm --resolve-extensions=.ts,.js",
+    "dev": "vite-node -w cron/index.ts --host",
+    "test": "vitest"
+  },
+  "license": "MIT",
+  "description": "",
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.8",
+    "@types/node": "^22.10.10",
+    "globals": "^15.11.0",
+    "vitest": "^3.0.2"
+  },
+	"dependencies": {
+    "vite-node": "^2.1.2",
+		"esbuild": "^0.23.1"
+	}
+}

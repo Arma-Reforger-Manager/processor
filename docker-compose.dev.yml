@@ -1,0 +1,11 @@
+services:
+  processor:
+    container_name: app_cron
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    working_dir: /work
+    entrypoint: vite-node -w /work/cron/index.ts
+    volumes:
+      - ./src:/work
+      - ./node_modules:/work/node_modules

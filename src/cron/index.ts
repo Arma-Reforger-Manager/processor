@@ -2,7 +2,7 @@
     HTTP Server
 */
 import { createServer, IncomingMessage } from "node:http"
-let server = createServer().listen(83)
+let server = createServer().listen(82)
 
 const headers = {
     'Access-Control-Allow-Origin': 'http://localhost',

@@ -3,21 +3,20 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "start": "ls -a && node dist/index.js",
-    "build": "esbuild './cron/**/*.ts' --bundle --packages=external --platform=node --target=node18 --outdir=dist --outbase=cron --minify --sourcemap --format=esm --resolve-extensions=.ts,.js",
-    "dev": "vite-node -w cron/index.ts",
+    "dev": "npm run build && set NODE_ENV=development&&  node dist/index.js",
+    "start": "set NODE_ENV=production&& node dist/index.js",
+    "build": "esbuild cron/**.ts --bundle --packages=external --outdir=dist  --platform=node --format=esm ",
     "test": "vitest"
   },
   "license": "MIT",
   "description": "",
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.8",
     "@types/node": "^22.12.0",
-    "globals": "^15.11.0",
-    "vitest": "^3.0.2"
+    "esbuild": "*",
+    "vitest": "*"
   },
   "dependencies": {
-    "esbuild": "^0.23.1",
-    "vite-node": "^2.1.2"
+    "mongodb": "^6.12.0",
+    "timers": "^0.1.1"
   }
 }

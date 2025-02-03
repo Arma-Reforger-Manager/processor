@@ -5,7 +5,7 @@
 import { createServer, IncomingMessage } from "node:http"
 import { env } from "node:process";
 let server = createServer().listen(82, () => {
-    console.debug({listenPort: 82, NODE_ENV: env['NODE_ENV']})
+    console.debug({ listenPort: 82, NODE_ENV: env['NODE_ENV'] })
 })
 
 const headers = {
@@ -22,7 +22,14 @@ async function ReadBody(req: IncomingMessage) {
             if (read) body += read
         });
         req.on('end', function () {
-            res(body)
+            if (req.headers["content-type"] === 'application/json') {
+                try {
+                    res(JSON.parse(body))
+                } catch (error) {
+                    console.error({error})
+                    res(body)
+                }
+            }else res(body)
         })
     })
 }
@@ -34,12 +41,13 @@ server.on("request", async (req, res) => {
         res.writeHead(200, { ...headers });
         res.end();
     } else {
-        const body = await ReadBody(req)
+        const body: any = await ReadBody(req)
         res.writeHead(200, { 'Content-Type': 'application/json', ...headers });
 
         switch (req.url) {
             case '/game/logs':
-                console.debug({'/game/logs': body})
+                console.debug({ body })
+                // console.debug({ ...body, ...req.rawHeaders })
                 return res.end(JSON.stringify({ success: true }));
                 break;
 
@@ -53,4 +61,18 @@ server.on("request", async (req, res) => {
 /*
     Database(s)
 */
-import './mongo.js'
+try {
+    console.log('Importing MongoDB')
+    await import('./MongoDB.js')
+} catch (error: any) {
+    console.debug({ error })
+    throw new Error("Failed to import MongoDB")
+}
+
+try {
+    console.log('Importing MariaDB')
+    await import('./MariaDB.js')
+} catch (error: any) {
+    console.debug({ error })
+    throw new Error("Failed to import MariaDB")
+}

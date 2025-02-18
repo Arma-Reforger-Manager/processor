@@ -16,7 +16,7 @@ export const GLOBAL_VARS = () => {
 
             MongoDB_Username: "mongodb_root_raw",
             MongoDB_Password: "password",
-            MongoDB_Host: "localhost",
+            MongoDB_Host: "127.0.0.1",
         };
     }
 

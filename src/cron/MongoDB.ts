@@ -2,7 +2,7 @@ import { GLOBAL_VARS } from './environment.js';
 import { Collection, Db, InsertOneResult, MongoClient } from 'mongodb';
 
 // TESTING
-const url = `mongodb://${GLOBAL_VARS().MongoDB_Username}:${GLOBAL_VARS().MongoDB_Password}@${GLOBAL_VARS().MongoDB_Host}:27017`;
+const url = `mongodb://${GLOBAL_VARS().MongoDB_Username}:${GLOBAL_VARS().MongoDB_Password}@${GLOBAL_VARS().MongoDB_Host}:3305`;
 const client = new MongoClient(url, {maxPoolSize: 5, minPoolSize: 2, maxIdleTimeMS : 270000});
 
 async function main() {
@@ -53,7 +53,7 @@ export class MongoDB_Query {
             const Host = GLOBAL_VARS()['MongoDB_Host'];
             const Password = GLOBAL_VARS()['MongoDB_Password'];
             const Username = GLOBAL_VARS()['MongoDB_Username'];
-            this.Client = new MongoClient(`mongodb://${Username}:${Password}@${Host}:27017`, {minPoolSize: 2, maxPoolSize: 10, maxIdleTimeMS : 270000});
+            this.Client = new MongoClient(`mongodb://${Username}:${Password}@${Host}:3305`, {minPoolSize: 2, maxPoolSize: 10, maxIdleTimeMS : 270000});
             this.MongoDB = this.Client.db(this.Database);
             resolve(true)
         });

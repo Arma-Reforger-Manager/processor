@@ -1,3 +1,26 @@
+
+/*
+    Database(s)
+*/
+// MongoDB
+export let MongoDB: typeof import('./MongoDB.js');
+try {
+    console.log('Importing MongoDB')
+    MongoDB = await import('./MongoDB.js')
+} catch (error: any) {
+    console.debug({ error })
+    throw new Error("Failed to import MongoDB")
+}
+// MariaDB
+export let MariaDB: typeof import('./MariaDB.js');
+try {
+    console.log('Importing MariaDB')
+    MariaDB = await import('./MariaDB.js')
+} catch (error: any) {
+    console.debug({ error })
+    throw new Error("Failed to import MariaDB")
+}
+
 /*
     HTTP Server
 */
@@ -9,7 +32,7 @@ let server = createServer().listen(82, () => {
 })
 
 const headers = {
-    'Access-Control-Allow-Origin': env['NODE_ENV'] === 'production' ? "https://raw.fabby.dev" : "http://localhost",
+    'Access-Control-Allow-Origin': env['NODE_ENV'] === 'production' ? "https://raw_manager.flabby.dev" : "http://localhost",
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Max-Age': 2592000, // 30 days
 };
@@ -40,7 +63,7 @@ server.on("request", async (req, res) => {
     if (req.method === 'OPTIONS') {
         res.writeHead(200, { ...headers });
         res.end();
-    } else {
+    }  if (req.method === 'POST') {
         const body: any = await ReadBody(req)
         res.writeHead(200, { 'Content-Type': 'application/json', ...headers });
 
@@ -48,7 +71,12 @@ server.on("request", async (req, res) => {
             case '/game/logs':
                 console.debug({ body })
                 // console.debug({ ...body, ...req.rawHeaders })
-                return res.end(JSON.stringify({ success: true }));
+                const rawClass =  new MongoDB.MongoDB_Query()
+                const rawLogger = await rawClass.GetCollection('game_logs')
+                const log = rawLogger.insertOne(body)
+                res.end(JSON.stringify({ success: true }));
+                Promise.all([log] )
+                return 
                 break;
 
             default:
@@ -56,23 +84,17 @@ server.on("request", async (req, res) => {
                 break;
         }
     }
+    return res.end(JSON.stringify({ success: false }));
 })
 
 /*
-    Database(s)
+    Processor
 */
-try {
-    console.log('Importing MongoDB')
-    await import('./MongoDB.js')
-} catch (error: any) {
-    console.debug({ error })
-    throw new Error("Failed to import MongoDB")
+async function processor() {
+    await import('./game_log_loop.js')
 }
-
 try {
-    console.log('Importing MariaDB')
-    await import('./MariaDB.js')
-} catch (error: any) {
-    console.debug({ error })
-    throw new Error("Failed to import MariaDB")
+    processor();
+} catch (error) {
+    console.error(error)
 }

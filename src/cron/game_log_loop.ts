@@ -62,7 +62,7 @@ async function main_loop() {
 	}
 	setTimeout(() => {
 		return main_loop()
-	}, 10000); //10s
+	}, 30000); //30s
 }
 
  function extractFromString(document: DocumentWithLogs): any[] {

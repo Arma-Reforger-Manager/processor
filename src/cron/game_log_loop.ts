@@ -12,11 +12,13 @@ interface DocumentWithLogs {
 	log?: string
 }
 
+// Database
+const rawClass = new MongoDB.MongoDB_Query()
+const rawLogger = await rawClass.GetCollection('game_logs')
+
 async function main_loop() {
 	if  (GLOBAL_VARS().IS_DEVELOPMENT) console.log('Running game_log_loop.ts main_loop()')
 	try {
-		const rawClass = new MongoDB.MongoDB_Query()
-		const rawLogger = await rawClass.GetCollection('game_logs')
 		const UnProcessedBatchedLogs = await rawLogger.find(
 			{
 				processed: {
@@ -45,6 +47,9 @@ async function main_loop() {
 				]
 			}, { limit: 50 }
 		).toArray()
+
+		// Close database link
+
 		// const log = rawLogger.insertOne(body)
 		const logs = [...UnProcessedBatchedLogs, ...UnProcessedLogs] // <= 300
 
@@ -60,9 +65,6 @@ async function main_loop() {
 	} catch (error) {
 		console.error({ error })
 	}
-	setTimeout(() => {
-		return main_loop()
-	}, 30000); //30s
 }
 
  function extractFromString(document: DocumentWithLogs): any[] {
@@ -172,5 +174,6 @@ async function identifiers(document: DocumentWithLogs): Promise<void> {
 	}
 }
 
-main_loop()
-	.catch(console.error)
+setInterval(() => {
+	main_loop()
+}, 300000); //5 minutes

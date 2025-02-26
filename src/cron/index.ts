@@ -73,10 +73,8 @@ server.on("request", async (req, res) => {
                 // console.debug({ ...body, ...req.rawHeaders })
                 const rawClass =  new MongoDB.MongoDB_Query()
                 const rawLogger = await rawClass.GetCollection('game_logs')
-                const log = rawLogger.insertOne(body)
-                res.end(JSON.stringify({ success: true }));
-                Promise.all([log] )
-                return 
+                const log = await rawLogger.insertOne(body)
+                return res.end(JSON.stringify({ success: true }));
                 break;
 
             default:
@@ -90,11 +88,8 @@ server.on("request", async (req, res) => {
 /*
     Processor
 */
-async function processor() {
-    await import('./game_log_loop.js')
-}
 try {
-    processor();
+    await import('./game_log_loop.js')
 } catch (error) {
     console.error(error)
 }
